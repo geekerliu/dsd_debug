@@ -45,8 +45,8 @@ int main(int argc, char const *argv[]) {
 }
 ```
 ## 输出内容
-1451015934:433395 [main.c:35][main] f_num= 12.34
-1451015934:433476 [main.c:36][main] time= 1234
-1451015934:433491 [main.c:37][main] 34
-1451015934:433504 [main.c:38][main] hello world
-1451015934:433521 [main.c:39][main] 42
+1451015934:433395 [main.c:35][main] f_num= 12.34 <br/>
+1451015934:433476 [main.c:36][main] time= 1234 <br/>
+1451015934:433491 [main.c:37][main] 34 <br/>
+1451015934:433504 [main.c:38][main] hello world <br/>
+1451015934:433521 [main.c:39][main] 42 <br/>
