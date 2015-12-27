@@ -6,11 +6,15 @@
 
 #define _DEBUG
 #ifdef _DEBUG
-#define dsd_debug(...) \
+#define dsd_debug(...)\
+		time_in_microseconds();\
+		idebug(__VA_ARGS__);
+#define dsd_debug_raw(...) \
 		time_in_microseconds();\
 		idebug_raw(__VA_ARGS__);
 #else
 #define dsd_debug(...) {}
+#define dsd_debug_raw(...) {}
 #endif
 
 void time_in_microseconds(void) {
@@ -32,10 +36,11 @@ int main(int argc, char const *argv[]) {
 	unsigned long long time = 1234;
 	float f_num = 12.34;
 
-	dsd_debug("f_num=", f_num);
-	dsd_debug("time=", time);
+	dsd_debug(f_num, time, num, str, answer());
+	dsd_debug(time);
 	dsd_debug(num);
-	dsd_debug("hello", str);
+	dsd_debug(str);
 	dsd_debug(answer());
+
 	return 0;
 }
