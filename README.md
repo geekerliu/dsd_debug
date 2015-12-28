@@ -30,3 +30,9 @@ int main(int argc, char const *argv[]) {
 1451201741:12375 [time.c:42][main] str = world
 1451201741:12378 [time.c:43][main] answer() = 42
 ```
+## 使用方法
+```
+#define _DEBUG
+#include "debug.h"
+//开始享受调试的乐趣吧 
+```
