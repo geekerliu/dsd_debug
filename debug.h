@@ -63,7 +63,8 @@
 #undef idebug
 #undef debug_raw
 #undef idebug_raw
-
+#include <stdio.h>
+#include <sys/time.h>
 /* If NDEBUG is defined, the debugging functions shouldn't print anything. The
  * standard states that assert.h should support being re-included, to allow
  * having different NDEBUG states in different places (e.g. a library header
@@ -203,6 +204,27 @@ int printf(const char *restrict format, ...);
 
 #define debug_raw(...) __custom_debug(__debug_raw_P_, __VA_ARGS__)
 #define idebug_raw(...) __custom_idebug(__debug_raw_P_, " ", __VA_ARGS__)
+
+#ifdef _DEBUG
+#define dsd_debug(...)\
+    time_in_microseconds();\
+    idebug(__VA_ARGS__);
+#define dsd_debug_raw(...) \
+    time_in_microseconds();\
+    idebug_raw(__VA_ARGS__);
+#else
+#define dsd_debug(...) {}
+#define dsd_debug_raw(...) {}
+#endif
+
+inline void time_in_microseconds(void) {
+  unsigned long long now;
+  struct timeval tv;
+
+  gettimeofday(&tv, NULL);
+  now = ((unsigned long long)tv.tv_sec * 1000000LL) + tv.tv_usec;
+  fprintf(stderr, "%llu:%d ", now / 1000000, (int)(now % 1000000));
+}
 
 #endif /* NDEBUG */
 
