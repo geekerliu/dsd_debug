@@ -199,10 +199,14 @@ int dsd_log_filter(int filter);
 
 #ifdef _DEBUG
 
+#define DSD_PRINT_END fprintf(stderr, "\033[0m")// end
+
 #define dsd_debug(...) \
-    idebug(__VA_ARGS__);
+    idebug(__VA_ARGS__); \
+    DSD_PRINT_END;
 #define dsd_debug_raw(...) \
-    idebug_raw(__VA_ARGS__);
+    idebug_raw(__VA_ARGS__); \
+    DSD_PRINT_END;
 
 /* ----------------------------- */
 

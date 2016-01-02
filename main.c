@@ -2,8 +2,6 @@
 #define _DEBUG
 #include "debug.h"
 
-
-
 int answer(void) {
     return 42;
 }
@@ -14,7 +12,7 @@ int main(int argc, char const *argv[]) {
 	char *str = "world";
 	float f_num = 12.34;
 
-	dsd_set_log_level(DSD_ERR|DSD_NOTICE);//set debug level
+	dsd_set_log_level(DSD_ERR|DSD_NOTICE|DSD_WARN|DSD_DEBUG|DSD_INFO);//set debug level
 
 	dsdl_notice(f_num, l_num, num, str, answer());
 	dsdl_warn(l_num);
