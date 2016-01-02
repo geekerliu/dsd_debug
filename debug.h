@@ -148,7 +148,7 @@ int printf(const char *restrict format, ...);
  * take care of the formatting and printing of the arguments, and the optional
  * file and line information.
  */
-#define __print_info(sep) printf("[%s:%d][%s]%s-> ", __FILE__, __LINE__, __func__, sep)
+#define __print_info(sep) printf("[%s:%d][%s]%s", __FILE__, __LINE__, __func__, sep)
 #define __custom_debug(P, ...) (__print_0(P, __VA_ARGS__), printf("\n"))
 #define __custom_idebug(P, sep, ...) (__print_info(sep), __custom_debug(P, __VA_ARGS__))
 

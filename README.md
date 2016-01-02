@@ -4,31 +4,38 @@ c语言调试宏
 ```c
 int main(int argc, char const *argv[]) {
 	int num = 34;
+	unsigned long long l_num = 1234;
 	char *str = "world";
-	unsigned long long time = 1234;
 	float f_num = 12.34;
 
-	dsd_debug(f_num, time, num, str, answer());
-	dsd_debug(time);
-	dsd_debug(num);
-	dsd_debug(str);
-	dsd_debug(answer());
+	dsd_set_log_level(DSD_ERR|DSD_NOTICE);//set debug level
+
+	dsdl_notice(f_num, l_num, num, str, answer());
+	dsdl_warn(l_num);
+	dsdl_info(f_num);
+	dsdl_err(num);
+	dsdl_debug(str);
+
+	dsdl_notice_raw("num = ", num);
+	dsdl_warn_raw("l_num = ", l_num);
+	dsdl_info_raw("f_num = ", f_num);
+	dsdl_err_raw("num = ", num);
+	dsdl_debug_raw("str = ", str);
 
 	return 0;
 }
 ```
 ## 输出内容
 ```
-1451201741:12325 [time.c:39][main]
+NOTICE:[1451705546:584496][main.c:19][main]
 	f_num = 12.34
-	time = 1234
+	l_num = 1234
 	num = 34
 	str = world
 	answer() = 42
-1451201741:12368 [time.c:40][main] time = 1234
-1451201741:12372 [time.c:41][main] num = 34
-1451201741:12375 [time.c:42][main] str = world
-1451201741:12378 [time.c:43][main] answer() = 42
+ERR:[1451705546:584606][main.c:22][main] num = 34
+NOTICE:[1451705546:584614][main.c:25][main] num =  34
+ERR:[1451705546:584621][main.c:28][main] num =  34
 ```
 ## 使用方法
 ```
