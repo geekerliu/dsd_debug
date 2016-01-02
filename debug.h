@@ -1,27 +1,5 @@
-/* The MIT License (MIT)
- *
- * Copyright (c) 2015 Dario Sneidermanis <dariosn@gmail.com>
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to
- * deal in the Software without restriction, including without limitation the
- * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
- * sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- */
-
-/* Here Be Dragons! */
+#ifndef _DSD_DEBUG_H
+#define _DSD_DEBUG_H
 
 #undef __format
 #undef __print_arg
@@ -63,8 +41,7 @@
 #undef idebug
 #undef debug_raw
 #undef idebug_raw
-#include <stdio.h>
-#include <sys/time.h>
+
 /* If NDEBUG is defined, the debugging functions shouldn't print anything. The
  * standard states that assert.h should support being re-included, to allow
  * having different NDEBUG states in different places (e.g. a library header
@@ -171,7 +148,7 @@ int printf(const char *restrict format, ...);
  * take care of the formatting and printing of the arguments, and the optional
  * file and line information.
  */
-#define __print_info(sep) printf("[%s:%d][%s]%s", __FILE__, __LINE__, __func__, sep)
+#define __print_info(sep) printf("[%s:%d][%s]%s-> ", __FILE__, __LINE__, __func__, sep)
 #define __custom_debug(P, ...) (__print_0(P, __VA_ARGS__), printf("\n"))
 #define __custom_idebug(P, sep, ...) (__print_info(sep), __custom_debug(P, __VA_ARGS__))
 
@@ -205,26 +182,97 @@ int printf(const char *restrict format, ...);
 #define debug_raw(...) __custom_debug(__debug_raw_P_, __VA_ARGS__)
 #define idebug_raw(...) __custom_idebug(__debug_raw_P_, " ", __VA_ARGS__)
 
+#endif /* NDEBUG */
+
+enum dsd_log_levels {
+  DSD_ERR = 1 << 0,
+  DSD_WARN = 1 << 1,
+  DSD_NOTICE = 1 << 2,
+  DSD_INFO = 1 << 3,
+  DSD_DEBUG = 1 << 4,
+
+  DSD_COUNT =  6/* set to count of valid flags */
+};
+
+void dsd_set_log_level(int level);
+int dsd_log_filter(int filter);
+
 #ifdef _DEBUG
-#define dsd_debug(...)\
-    time_in_microseconds();\
+
+#define dsd_debug(...) \
     idebug(__VA_ARGS__);
 #define dsd_debug_raw(...) \
-    time_in_microseconds();\
     idebug_raw(__VA_ARGS__);
-#else
-#define dsd_debug(...) {}
-#define dsd_debug_raw(...) {}
+
+/* ----------------------------- */
+
+#define dsdl_err(...) do { \
+  if (dsd_log_filter(DSD_ERR))\
+      dsd_debug(__VA_ARGS__); \
+  } while(0)
+
+#define dsdl_warn(...) do { \
+if (dsd_log_filter(DSD_WARN))\
+    dsd_debug(__VA_ARGS__); \
+} while(0)
+
+#define dsdl_notice(...) do { \
+  if (dsd_log_filter(DSD_NOTICE))\
+      dsd_debug(__VA_ARGS__); \
+  } while(0)
+
+#define dsdl_info(...) do { \
+  if (dsd_log_filter(DSD_INFO))\
+      dsd_debug(__VA_ARGS__); \
+  } while(0)
+
+#define dsdl_debug(...) do { \
+  if (dsd_log_filter(DSD_DEBUG))\
+      dsd_debug(__VA_ARGS__); \
+  } while(0)
+
+/* ----------------------------- */
+
+#define dsdl_err_raw(...) do { \
+  if (dsd_log_filter(DSD_ERR))\
+      dsd_debug_raw(__VA_ARGS__); \
+  } while(0)
+
+#define dsdl_warn_raw(...) do { \
+  if (dsd_log_filter(DSD_WARN))\
+      dsd_debug_raw(__VA_ARGS__); \
+  } while(0)
+
+#define dsdl_notice_raw(...) do { \
+  if (dsd_log_filter(DSD_NOTICE))\
+      dsd_debug_raw(__VA_ARGS__); \
+  } while(0)
+
+#define dsdl_info_raw(...) do { \
+  if (dsd_log_filter(DSD_INFO))\
+      dsd_debug_raw(__VA_ARGS__); \
+  } while(0)
+
+#define dsdl_debug_raw(...) do { \
+  if (dsd_log_filter(DSD_DEBUG))\
+      dsd_debug_raw(__VA_ARGS__); \
+  } while(0)
+
+#else /* no debug */
+
+#define dsdl_notice(...) {}
+#define dsdl_warn(...) {}
+#define dsdl_err(...) {}
+#define dsdl_info(...) {}
+#define dsdl_debug(...) {}
+
+#define dsdl_notice_raw(...) {}
+#define dsdl_warn_raw(...) {}
+#define dsdl_err_raw(...) {}
+#define dsdl_info_raw(...) {}
+#define dsdl_debug_raw(...) {}
+
 #endif
 
-inline void time_in_microseconds(void) {
-  unsigned long long now;
-  struct timeval tv;
-
-  gettimeofday(&tv, NULL);
-  now = ((unsigned long long)tv.tv_sec * 1000000LL) + tv.tv_usec;
-  fprintf(stderr, "%llu:%d ", now / 1000000, (int)(now % 1000000));
-}
-
-#endif /* NDEBUG */
+#endif
 
