@@ -8,7 +8,7 @@ int main(int argc, char const *argv[]) {
 	char *str = "world";
 	float f_num = 12.34;
 
-	dsd_set_log_level(DSD_ERR|DSD_NOTICE);//set debug level
+	dsd_set_log_level(DSD_ERR|DSD_NOTICE|DSD_WARN|DSD_DEBUG|DSD_INFO);//set debug level
 
 	dsdl_notice(f_num, l_num, num, str, answer());
 	dsdl_warn(l_num);
@@ -26,17 +26,7 @@ int main(int argc, char const *argv[]) {
 }
 ```
 ## 输出内容
-```
-NOTICE:[1451705546:584496][main.c:19][main]
-	f_num = 12.34
-	l_num = 1234
-	num = 34
-	str = world
-	answer() = 42
-ERR:[1451705546:584606][main.c:22][main] num = 34
-NOTICE:[1451705546:584614][main.c:25][main] num =  34
-ERR:[1451705546:584621][main.c:28][main] num =  34
-```
+![打印输出](1.png)
 ## 使用方法
 ```
 #define _DEBUG
